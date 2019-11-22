@@ -18,10 +18,13 @@ public abstract class Piece {
     protected Color color;
     protected Type type;
     protected boolean capture;
+    //plus moved
+    protected boolean moved;
 
     public Piece(Color color) {
         this.color = color;
         this.capture = false;
+        this.moved = false;
     }
 
     public abstract boolean validateMove(Move move);
@@ -75,5 +78,11 @@ public abstract class Piece {
     public boolean getCapture() {
         return this.capture;
     }
+
+    public boolean getMoved() {
+        return this.moved;
+    }
+
+    public void setMoved(boolean status) { this.moved = status; }
 
 }

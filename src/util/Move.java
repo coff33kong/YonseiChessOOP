@@ -1,7 +1,7 @@
 package util;
 
-import board.Board;
-import pieces.Piece;
+        import board.Board;
+        import pieces.Piece;
 
 public class Move {
 
