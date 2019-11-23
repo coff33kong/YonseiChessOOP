@@ -16,13 +16,13 @@ public class Knight extends Piece {
                 || (move.getCapturedPiece() != null
                 && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
             // along file
-            if (move.getDestinationFile() == move.getOriginFile()
-                    && move.getDestinationRank() != move.getOriginRank()) {
+            if (Math.abs(move.getDestinationFile() - move.getOriginFile()) == 2
+                    && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 1) {
                 return true;
             }
             // along rank
-            if (move.getDestinationFile() != move.getOriginFile()
-                    && move.getDestinationRank() == move.getOriginRank()) {
+            if (Math.abs(move.getDestinationFile() - move.getOriginFile()) == 1
+                    && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 2) {
                 return true;
             }
         }

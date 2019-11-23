@@ -18,16 +18,17 @@ public class Rook extends Piece {
             // along file
             if (move.getDestinationFile() == move.getOriginFile()
                     && move.getDestinationRank() != move.getOriginRank()) {
+                move.getPiece().setMoved(true);
                 return true;
             }
             // along rank
             if (move.getDestinationFile() != move.getOriginFile()
                     && move.getDestinationRank() == move.getOriginRank()) {
+                move.getPiece().setMoved(true);
                 return true;
             }
         }
 
-        // all other cases
         return false;
     }
 

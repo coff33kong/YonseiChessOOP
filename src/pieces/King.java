@@ -17,12 +17,17 @@ public class King extends Piece {
                 && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
             // along file
             if (move.getDestinationFile() == move.getOriginFile()
-                    && move.getDestinationRank() != move.getOriginRank()) {
+                    && Math.abs(move.getDestinationRank() - move.getOriginRank())==1) {
                 return true;
             }
             // along rank
-            if (move.getDestinationFile() != move.getOriginFile()
+            if (Math.abs(move.getDestinationFile() - move.getOriginFile())==1
                     && move.getDestinationRank() == move.getOriginRank()) {
+                return true;
+            }
+            if ((Math.abs(move.getDestinationRank()-move.getOriginRank())
+                    == Math.abs(move.getDestinationFile()-move.getOriginFile()))
+                    && Math.abs(move.getDestinationFile()-move.getOriginFile()) == 1){
                 return true;
             }
         }
