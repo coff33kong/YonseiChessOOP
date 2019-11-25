@@ -1,6 +1,7 @@
 package pieces;
 
 import util.Move;
+import util.MoveValidator;
 
 public class Bishop extends Piece {
 

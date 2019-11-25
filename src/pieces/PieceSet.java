@@ -1,5 +1,7 @@
 package pieces;
 
+import util.Move;
+
 import java.util.*;
 
 public class PieceSet {
@@ -64,6 +66,22 @@ public class PieceSet {
             return blackKingRank;
         } else {
             return whiteKingRank;
+        }
+    }
+
+    public static void setKingFile(Piece.Color color, char move) {
+        if (color.equals(Piece.Color.WHITE)) {
+            whiteKingFile = move;
+        } else {
+            blackKingFile = move;
+        }
+    }
+
+    public static void setKingRank(Piece.Color color,int move) {
+        if (color.equals(Piece.Color.WHITE)) {
+            whiteKingRank = move;
+        } else {
+            blackKingRank = move;
         }
     }
 

@@ -1,6 +1,7 @@
 package pieces;
 
 import util.Move;
+import util.MoveValidator;
 
 public class Knight extends Piece {
 
@@ -15,6 +16,8 @@ public class Knight extends Piece {
         if ((move.getCapturedPiece() == null)
                 || (move.getCapturedPiece() != null
                 && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
+
+
             // along file
             if (Math.abs(move.getDestinationFile() - move.getOriginFile()) == 2
                     && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 1) {

@@ -70,6 +70,7 @@ public class BoardPanel extends JPanel implements Observer {
     }
 
     public void postDrag() {
+
         JLabel draggedPieceImageLabel = (JLabel) boardLayeredPane.getComponentsInLayer(JLayeredPane.DRAG_LAYER)[0];
         boardLayeredPane.remove(draggedPieceImageLabel);
         boardLayeredPane.repaint();

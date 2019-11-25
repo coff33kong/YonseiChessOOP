@@ -1,6 +1,7 @@
 package pieces;
 
 import util.Move;
+import util.MoveValidator;
 
 public class Queen extends Piece {
 
@@ -15,6 +16,7 @@ public class Queen extends Piece {
         if ((move.getCapturedPiece() == null)
                 || (move.getCapturedPiece() != null
                 && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
+
             // along file
             if (move.getDestinationFile() == move.getOriginFile()
                     && move.getDestinationRank() != move.getOriginRank()) {
