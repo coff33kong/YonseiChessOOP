@@ -363,18 +363,37 @@ public class MoveValidator {
 
         }
 
+
         //왕이 그자리에서 피할 수 있는 경우가 하나라도 있으면 괜찮음
-        if (longLiveTheKing(kingColor, (char) (kingF + 1), kingR) &&
-                longLiveTheKing(kingColor, (char) (kingF + 1), kingR + 1) &&
-                longLiveTheKing(kingColor, (char) (kingF + 1), kingR - 1) &&
-                longLiveTheKing(kingColor, (char) (kingF - 1), kingR) &&
-                longLiveTheKing(kingColor, (char) (kingF - 1), kingR + 1) &&
-                longLiveTheKing(kingColor, (char) (kingF - 1), kingR - 1) &&
-                longLiveTheKing(kingColor, kingF, kingR + 1) &&
-                longLiveTheKing(kingColor, kingF, kingR - 1) ) {
+        if (kingAvoidence(move, kingColor , (char)(kingF + 1), kingR) ||
+                kingAvoidence(move, kingColor , (char)(kingF + 1), kingR + 1) ||
+                kingAvoidence(move, kingColor , (char)(kingF + 1), kingR - 1) ||
+                kingAvoidence(move, kingColor , (char)(kingF - 1), kingR) ||
+                kingAvoidence(move, kingColor , (char)(kingF - 1), kingR + 1) ||
+                kingAvoidence(move, kingColor , (char)(kingF - 1), kingR - 1) ||
+                kingAvoidence(move, kingColor , kingF , kingR + 1) ||
+                kingAvoidence(move, kingColor , kingF , kingR - 1)
+        ) {
             return true;
         }
 
+
+        return true;
+    }
+    //king이 F,R 로 피할 수 있으면 true 반환
+    private  static  boolean kingAvoidence(Move move, Piece.Color kingColor ,char kingF, int kingR) {
+        if ( 'a' < kingF && kingF < 'h'&& 1 < kingR && kingR < 8) {
+            if (Board.getSquare(kingF, kingR).getCurrentPiece() == null) {
+                if (kingAttack(kingColor, move.getDestinationFile(), move.getDestinationRank(), kingF , kingR)) {
+                    return true;
+                }
+            }
+            if (Board.getSquare(kingF , kingR).getCurrentPiece().getColor() != kingColor) {
+                if (kingAttack(kingColor, move.getDestinationFile(), move.getDestinationRank(), kingF, kingR)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -383,8 +402,8 @@ public class MoveValidator {
         PieceSet.setKingFile(kingColor , moveF);
         PieceSet.setKingRank(kingColor , moveR);
         if (MoveValidator.longLiveTheKing(kingColor,
-                PieceSet.getKingFile(kingColor),
-                PieceSet.getKingFile(kingColor))) {
+                moveF,
+                moveR)) {
             PieceSet.setKingFile(kingColor, kingF);
             PieceSet.setKingRank(kingColor, kingR);
             return false;
