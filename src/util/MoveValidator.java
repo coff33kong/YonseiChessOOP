@@ -336,21 +336,24 @@ public class MoveValidator {
         //왕 위치
         char kingF = PieceSet.getOpponentKingFile(move.getPiece().getColor());
         int kingR = PieceSet.getOpponentKingRank(move.getPiece().getColor());
-        Piece.Color opponentKingColor = move.getPiece().getColor();
+        Piece.Color kingColor = move.getPiece().getColor();
 
-        if (thisPiece.getType() == Piece.Type.PAWN) {
-            if (thisPiece.getColor() == Piece.Color.WHITE) {
-                //color is white
-
-            } else {
-                //color is black
-
-            }
+        if (kingColor.equals(Piece.Color.WHITE)) {
+            kingColor = Piece.Color.BLACK;
+        } else {
+            kingColor = Piece.Color.WHITE;
         }
-        else if (thisPiece.getType() == Piece.Type.KNIGHT) {
 
+        //그 애를 왕이 아닌 다른말로 처치할 수 있으면 괜찮음
+        if (longLiveTheKing(move.getPiece().getColor(), move.getDestinationFile(), move.getDestinationRank())) {
+            return false;
         }
-        else if (thisPiece.getType() == Piece.Type.BISHOP) {
+        //왕이 그 애를 처치했는데 무사하면 괜찮음
+        if (!(kingAttack(kingColor,move.getDestinationFile(),move.getDestinationRank(),kingF,kingR)))
+            return false;
+
+        //왕과 그 사이에 있는 공간에 다른애가 들어올 수 있으면 괜찮음
+        if (thisPiece.getType() == Piece.Type.BISHOP) {
 
         }
         else if (thisPiece.getType() == Piece.Type.ROOK) {
@@ -360,10 +363,38 @@ public class MoveValidator {
 
         }
 
+        //왕이 그자리에서 피할 수 있는 경우가 하나라도 있으면 괜찮음
+        if (longLiveTheKing(kingColor, (char) (kingF + 1), kingR) &&
+                longLiveTheKing(kingColor, (char) (kingF + 1), kingR + 1) &&
+                longLiveTheKing(kingColor, (char) (kingF + 1), kingR - 1) &&
+                longLiveTheKing(kingColor, (char) (kingF - 1), kingR) &&
+                longLiveTheKing(kingColor, (char) (kingF - 1), kingR + 1) &&
+                longLiveTheKing(kingColor, (char) (kingF - 1), kingR - 1) &&
+                longLiveTheKing(kingColor, kingF, kingR + 1) &&
+                longLiveTheKing(kingColor, kingF, kingR - 1) ) {
+            return true;
+        }
+
         return false;
     }
 
+    // 특정 색을 지닌 킹이 이동할 경우 안전한지 확인
+    private static boolean kingAttack(Piece.Color kingColor, char moveF , int moveR, char kingF, int kingR) {
+        PieceSet.setKingFile(kingColor , moveF);
+        PieceSet.setKingRank(kingColor , moveR);
+        if (MoveValidator.longLiveTheKing(kingColor,
+                PieceSet.getKingFile(kingColor),
+                PieceSet.getKingFile(kingColor))) {
+            PieceSet.setKingFile(kingColor, kingF);
+            PieceSet.setKingRank(kingColor, kingR);
+            return false;
+        }
+        PieceSet.setKingFile(kingColor, kingF);
+        PieceSet.setKingRank(kingColor, kingR);
+        return true;
+    }
 
+    // 색과 위치를 지정하고 그 위치로 가면 그 색을 가진 말이 위험할 경우 true 를 반환
     public static boolean longLiveTheKing(Piece.Color color, char kingFile, int kingRank) {
 
         // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
@@ -607,6 +638,7 @@ public class MoveValidator {
                 || Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.QUEEN;
     }
 
+    //move 를 할 때 우리 king 이 위협받는 경우
     public static boolean protectedKing(Move move, Piece.Color color) {
         Square originSquare = Board.getSquare(move.getOriginFile(), move.getOriginRank());
         Square destinationSquare = Board.getSquare(move.getDestinationFile(), move.getDestinationRank());
@@ -633,9 +665,6 @@ public class MoveValidator {
         System.out.print(move.getOriginFile() );
         System.out.println(move.getOriginRank());
         System.out.println(currentMoveColor);
-
-        //Square originSquare = Board.getSquare(move.getOriginFile(), move.getOriginRank());
-        //originSquare.setCurrentPiece(null);
 
         if (thisPiece.getType() == Piece.Type.PAWN) {
             if (thisPiece.getColor() == Piece.Color.WHITE) {
@@ -781,8 +810,8 @@ public class MoveValidator {
             PieceSet.setKingFile(move.getPiece().getColor(), move.getDestinationFile());
             PieceSet.setKingRank(move.getPiece().getColor(), move.getDestinationRank());
             if (MoveValidator.longLiveTheKing(move.getPiece().getColor(),
-                    PieceSet.getKingFile(move.getPiece().getColor()),
-                    PieceSet.getKingFile(move.getPiece().getColor()))) {
+                    move.getDestinationFile(),
+                    move.getDestinationRank())) {
                 PieceSet.setKingFile(move.getPiece().getColor(), move.getOriginFile());
                 PieceSet.setKingRank(move.getPiece().getColor(), move.getOriginRank());
                 return false;
@@ -799,6 +828,5 @@ public class MoveValidator {
         // TODO-check 추가적으로 할만한거
         return false;
     }
-
 
 }
