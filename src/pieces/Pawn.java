@@ -16,16 +16,17 @@ public class Pawn extends Piece {
         if (move.getCapturedPiece() == null
             && move.getDestinationFile() == move.getOriginFile()) {
 
+            if(MoveValidator.protectedKing(move,color))
+                return false;
+
             //can move two squares
             if (move.getPiece().getMoved() == false
                     && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 2) {
 
-                move.getPiece().setMoved(true);
                 return true;
 
             } else if (Math.abs(move.getDestinationRank() - move.getOriginRank()) == 1) {
 
-                move.getPiece().setMoved(true);
                 return true;
 
             }
@@ -37,7 +38,6 @@ public class Pawn extends Piece {
                     && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 1){
                 // 앞 대각선으로 한칸 이동 확인
 
-                move.getPiece().setMoved(true);
                 return true;
 
             }

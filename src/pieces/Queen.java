@@ -17,6 +17,9 @@ public class Queen extends Piece {
                 || (move.getCapturedPiece() != null
                 && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
 
+            if(MoveValidator.protectedKing(move,color))
+                return false;
+
             // along file
             if (move.getDestinationFile() == move.getOriginFile()
                     && move.getDestinationRank() != move.getOriginRank()) {

@@ -217,4 +217,5 @@ public class PieceSet {
         blackKingRank = 8;
     }
 
+
 }

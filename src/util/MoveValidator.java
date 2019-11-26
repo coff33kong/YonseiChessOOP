@@ -317,14 +317,44 @@ public class MoveValidator {
 
     public static boolean isCheckMate(Move move) {
         // TODO-check 8번 is check 를 확인하고 공격하는 말과 왕 사이에 올 수 있는 아군이 존재하는지 확인
+        //공격하고 있는 Piece 의 종류
+        Piece thisPiece = Board.getSquare(move.getDestinationFile(), move.getDestinationRank()).getCurrentPiece();
+        //왕 위치
+        char kingF = PieceSet.getOpponentKingFile(move.getPiece().getColor());
+        int kingR = PieceSet.getOpponentKingRank(move.getPiece().getColor());
+        Piece.Color opponentKingColor = move.getPiece().getColor();
+
+        if (thisPiece.getType() == Piece.Type.PAWN) {
+            if (thisPiece.getColor() == Piece.Color.WHITE) {
+                //color is white
+
+            } else {
+                //color is black
+
+            }
+        }
+        else if (thisPiece.getType() == Piece.Type.KNIGHT) {
+
+        }
+        else if (thisPiece.getType() == Piece.Type.BISHOP) {
+
+        }
+        else if (thisPiece.getType() == Piece.Type.ROOK) {
+
+        }
+        else if (thisPiece.getType() == Piece.Type.QUEEN) {
+
+        }
+
         return false;
     }
 
-    public static boolean longLiveTheKing(Piece.Color color) {
+
+    public static boolean longLiveTheKing(Piece.Color color, char kingFile, int kingRank) {
 
         // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
-        char kingF = PieceSet.getKingFile(color); // white
-        int kingR = PieceSet.getKingRank(color);
+        char kingF = kingFile; // white
+        int kingR = kingRank;
         System.out.println(kingF);
         System.out.println(kingR);
         // king 의 상하 좌우 위치
@@ -547,8 +577,25 @@ public class MoveValidator {
                 || Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.QUEEN;
     }
 
+    public static boolean protectedKing(Move move, Piece.Color color) {
+        Square originSquare = Board.getSquare(move.getOriginFile(), move.getOriginRank());
+        Square destinationSquare = Board.getSquare(move.getDestinationFile(), move.getDestinationRank());
+        Piece tmp = originSquare.getCurrentPiece();
+        Piece tmp2 = destinationSquare.getCurrentPiece();
+        originSquare.setCurrentPiece(null);
+        destinationSquare.setCurrentPiece(tmp);
+        if(MoveValidator.longLiveTheKing(color, PieceSet.getKingFile(color), PieceSet.getKingRank(color))) {
+            originSquare.setCurrentPiece(tmp);
+            destinationSquare.setCurrentPiece(tmp2);
+            return true;
+        }
+        originSquare.setCurrentPiece(tmp);
+        destinationSquare.setCurrentPiece(tmp2);
+        return false;
+    }
+
     private static boolean validateClearPath(Move move) {
-        // TODO-movement 체크 상황 추가로 넣어줘야함
+        // TODO-movement
         // check the piece
         Piece thisPiece = Board.getSquare(move.getOriginFile(), move.getOriginRank()).getCurrentPiece();
         System.out.print(move.getDestinationFile() );
@@ -557,12 +604,16 @@ public class MoveValidator {
         System.out.println(move.getOriginRank());
         System.out.println(currentMoveColor);
 
+        //Square originSquare = Board.getSquare(move.getOriginFile(), move.getOriginRank());
+        //originSquare.setCurrentPiece(null);
+
         if (thisPiece.getType() == Piece.Type.PAWN) {
             if (thisPiece.getColor() == Piece.Color.WHITE) {
                 //color is white
                 // 이동조건 확인
                 if (move.getDestinationRank()-move.getOriginRank() == 2 ){
-                    Piece blockPiece = Board.getSquare(move.getOriginFile(), move.getOriginRank()+1).getCurrentPiece();
+                    Piece blockPiece =
+                            Board.getSquare(move.getOriginFile(), move.getOriginRank()+1).getCurrentPiece();
                     if (blockPiece == null)
                         return true;
                 }
@@ -648,7 +699,7 @@ public class MoveValidator {
                     }
                 }
             }
-            move.getPiece().setMoved(true);
+
             return true;
         }
         else if (thisPiece.getType() == Piece.Type.QUEEN) {
@@ -699,21 +750,25 @@ public class MoveValidator {
         else if (thisPiece.getType() == Piece.Type.KING) {
             PieceSet.setKingFile(move.getPiece().getColor(), move.getDestinationFile());
             PieceSet.setKingRank(move.getPiece().getColor(), move.getDestinationRank());
-            if (MoveValidator.longLiveTheKing(move.getPiece().getColor())) {
+            if (MoveValidator.longLiveTheKing(move.getPiece().getColor(),
+                    PieceSet.getKingFile(move.getPiece().getColor()),
+                    PieceSet.getKingFile(move.getPiece().getColor()))) {
                 PieceSet.setKingFile(move.getPiece().getColor(), move.getOriginFile());
                 PieceSet.setKingRank(move.getPiece().getColor(), move.getOriginRank());
                 return false;
             }
-            move.getPiece().setMoved(true);
+
             return true;
         }
 
         return false;
     }
 
+
     public static boolean isStaleMate(Move move) {
         // TODO-check 추가적으로 할만한거
         return false;
     }
+
 
 }

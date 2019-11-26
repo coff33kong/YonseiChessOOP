@@ -17,6 +17,9 @@ public class Knight extends Piece {
                 || (move.getCapturedPiece() != null
                 && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
 
+            if(MoveValidator.protectedKing(move,color))
+                return false;
+
             // along file
             if (Math.abs(move.getDestinationFile() - move.getOriginFile()) == 2
                     && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 1) {

@@ -56,6 +56,7 @@ public class GameModel extends Observable {
                 gameFrame.showCheckDialog();
             }
         }
+        move.getPiece().setMoved(true);
     }
 
     public Piece queryPiece(char file, int rank) {

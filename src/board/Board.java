@@ -3,6 +3,7 @@ package board;
 import pieces.*;
 import util.Core;
 import util.Move;
+import util.MoveValidator;
 
 import java.util.Iterator;
 
@@ -39,13 +40,17 @@ public class Board {
     public static void executeMove(Move move) {
         Square originSquare = getSquare(move.getOriginFile(), move.getOriginRank());
         Square destinationSquare = getSquare(move.getDestinationFile(), move.getDestinationRank());
+        Piece originPiece = originSquare.getCurrentPiece();
+        Piece destPiece = destinationSquare.getCurrentPiece();
         if (destinationSquare.getCurrentPiece() != null) {
             destinationSquare.getCurrentPiece().setCapture(true);
             PieceSet.addCapturedPiece(destinationSquare.getCurrentPiece());
         }
         destinationSquare.setCurrentPiece(originSquare.getCurrentPiece());
         originSquare.setCurrentPiece(null);
+
     }
+
 
     private static void initializeSquares() {
         for (int i = 0; i < DIMENSION; i++) {

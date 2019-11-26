@@ -17,16 +17,19 @@ public class Rook extends Piece {
                 || (move.getCapturedPiece() != null
                     && !move.getPiece().getColor().equals(move.getCapturedPiece().getColor()))) {
 
+            if(MoveValidator.protectedKing(move,color))
+                return false;
+
             // along file
             if (move.getDestinationFile() == move.getOriginFile()
                     && move.getDestinationRank() != move.getOriginRank()) {
-                move.getPiece().setMoved(true);
+
                 return true;
             }
             // along rank
             if (move.getDestinationFile() != move.getOriginFile()
                     && move.getDestinationRank() == move.getOriginRank()) {
-                move.getPiece().setMoved(true);
+
                 return true;
             }
         }
