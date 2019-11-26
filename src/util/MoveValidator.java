@@ -320,6 +320,233 @@ public class MoveValidator {
         return false;
     }
 
+    public static boolean longLiveTheKing(Piece.Color color) {
+
+        // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
+        char kingF = PieceSet.getKingFile(color); // white
+        int kingR = PieceSet.getKingRank(color);
+        System.out.println(kingF);
+        System.out.println(kingR);
+        // king 의 상하 좌우 위치
+        int kingRight = 'h' - kingF;
+        int kingLeft = kingF - 'a';
+        int kingAbove = 8 - kingR;
+        int kingBelow = kingR - 1;
+        // squre 칸 할당할 변수 두개
+        char x;
+        int y;
+        // 오른쪽 위 대각선 체크하기
+        for (int i = 1; i <= Math.min(kingRight,kingAbove); i++) {
+            x = (char) (kingF + i);
+            y = kingR + i;
+            // 대각에서 공격가능하면 check
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //왼쪽 위 대각선 확인하기
+        for (int i = 1; i <= Math.min(kingLeft,kingAbove); i++) {
+            x = (char) (kingF - i);
+            y = kingR + i;
+            // 대각에서 공격가능하면 check
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //오른쪽 아래 대각선 확인하기
+        for (int i = 1; i <= Math.min(kingRight,kingBelow); i++) {
+            x = (char) (kingF + i);
+            y = kingR - i;
+            // 대각에서 공격가능하면 check
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //왼쪽 아래 대각선 확인하기
+        for (int i = 1; i <= Math.min(kingLeft,kingBelow); i++) {
+            x = (char) (kingF - i);
+            y = kingR - i;
+            // 대각에서 공격가능하면 check
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //오른쪽 직선 확인하기
+        for (int i = 1; i <= kingRight; i++) {
+            x = (char) (kingF + i);
+            y = kingR ;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //왼쪽 직선 확인하기
+        for (int i = 1; i <= kingLeft; i++) {
+            x = (char) (kingF - i);
+            y = kingR ;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //위 직선 확인하기
+        for (int i = 1; i <= kingAbove; i++) {
+            x = kingF;
+            y = kingR + i;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //아래 직선 확인하기
+        for (int i = 1; i <= kingBelow; i++) {
+            x = kingF;
+            y = kingR - i;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        // 나이트 위치 확인하기
+        for (int i = 0; i < 8 ; i++) {
+            x = 'a';
+            y = 1;
+            if (i==0) {
+                x = (char)(kingF + 2);
+                y = kingR + 1;
+            } else if (i==1) {
+                x = (char)(kingF + 2);
+                y = kingR - 1;
+            } else if (i==2) {
+                x = (char)(kingF + 1);
+                y = kingR + 2;
+            } else if (i==3) {
+                x = (char)(kingF - 1);
+                y = kingR + 2;
+            } else if (i==4) {
+                x = (char)(kingF - 2);
+                y = kingR + 1;
+            } else if (i==5) {
+                x = (char)(kingF - 2);
+                y = kingR - 1;
+            } else if (i==6) {
+                x = (char)(kingF - 1);
+                y = kingR + 2;
+            } else if (i==7) {
+                x = (char)(kingF - 1);
+                y = kingR - 2;
+            }
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if (Board.getSquare(x, y).getCurrentPiece().getColor() != color &&
+                    Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.KNIGHT)
+                return true;
+
+        }
+        //폰이랑 킹 위치 확인
+        if (color == Piece.Color.BLACK) {
+            x = (char) (kingF + 1);
+            y = kingR - 1;
+            if ('a' <= x && x <= 'h' && 1 <= y && y <= 8) {
+                if ((Board.getSquare(x, y).getCurrentPiece() != null)) {
+                    if (Board.getSquare(x, y).getCurrentPiece().getColor() == Piece.Color.WHITE &&
+                            Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.PAWN)
+                        return true;
+                }
+            }
+            x = (char) (kingF - 1);
+            y = kingR - 1;
+            if ('a' <= x && x <= 'h' && 1 <= y && y <= 8) {
+                if (Board.getSquare(x, y).getCurrentPiece() != null) {
+                    if (Board.getSquare(x, y).getCurrentPiece().getColor() == Piece.Color.WHITE &&
+                            Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.PAWN)
+                        return true;
+                }
+            }
+        } else {
+            x = (char) (kingF + 1);
+            y = kingR + 1;
+            if ('a' <= x && x <= 'h' && 1 <= y && y <= 8) {
+                if (Board.getSquare(x, y).getCurrentPiece() != null) {
+                    if (Board.getSquare(x, y).getCurrentPiece().getColor() == Piece.Color.BLACK &&
+                            Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.PAWN)
+                        return true;
+                }
+            }
+            x = (char) (kingF - 1);
+            y = kingR + 1;
+            if ('a' <= x && x <= 'h' && 1 <= y && y <= 8) {
+                if (Board.getSquare(x, y).getCurrentPiece() != null) {
+                    if (Board.getSquare(x, y).getCurrentPiece().getColor() == Piece.Color.BLACK &&
+                            Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.PAWN)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    private static boolean diagonalObstacle(char x, int y, Piece.Color color) {
+        return Board.getSquare(x,y).getCurrentPiece().getColor() == color ||
+                Board.getSquare(x,y).getCurrentPiece().getColor() != color &&
+                        !(Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.BISHOP
+                                || Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.QUEEN);
+    }
+    private static boolean diagonalOpponent(char x, int y, Piece.Color color) {
+        return Board.getSquare(x, y).getCurrentPiece().getColor() != color &&
+                (Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.BISHOP
+                        || Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.QUEEN);
+    }
+    private static boolean linearObstacle(char x, int y, Piece.Color color) {
+        return Board.getSquare(x,y).getCurrentPiece().getColor() == color ||
+                (Board.getSquare(x,y).getCurrentPiece().getColor() != color &&
+                        !(Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.ROOK
+                                || Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.QUEEN));
+    }
+    private static boolean linearOpponent(char x, int y, Piece.Color color) {
+        return Board.getSquare(x, y).getCurrentPiece().getColor() != color &&
+                Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.ROOK
+                || Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.QUEEN;
+    }
+
     private static boolean validateClearPath(Move move) {
         // TODO-movement 체크 상황 추가로 넣어줘야함
         // check the piece
@@ -470,8 +697,13 @@ public class MoveValidator {
         }
 
         else if (thisPiece.getType() == Piece.Type.KING) {
-            PieceSet.setKingFile(currentMoveColor, move.getDestinationFile());
-            PieceSet.setKingRank(currentMoveColor, move.getDestinationRank());
+            PieceSet.setKingFile(move.getPiece().getColor(), move.getDestinationFile());
+            PieceSet.setKingRank(move.getPiece().getColor(), move.getDestinationRank());
+            if (MoveValidator.longLiveTheKing(move.getPiece().getColor())) {
+                PieceSet.setKingFile(move.getPiece().getColor(), move.getOriginFile());
+                PieceSet.setKingRank(move.getPiece().getColor(), move.getOriginRank());
+                return false;
+            }
             move.getPiece().setMoved(true);
             return true;
         }

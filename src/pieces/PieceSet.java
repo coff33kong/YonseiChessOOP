@@ -69,6 +69,22 @@ public class PieceSet {
         }
     }
 
+    public static char getKingFile(Piece.Color color) {
+        if (color.equals(Piece.Color.WHITE)) {
+            return whiteKingFile;
+        } else {
+            return blackKingFile;
+        }
+    }
+
+    public static int getKingRank(Piece.Color color) {
+        if (color.equals(Piece.Color.WHITE)) {
+            return whiteKingRank;
+        } else {
+            return blackKingRank;
+        }
+    }
+
     public static void setKingFile(Piece.Color color, char move) {
         if (color.equals(Piece.Color.WHITE)) {
             whiteKingFile = move;
