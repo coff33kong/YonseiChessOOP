@@ -2,11 +2,9 @@ package util;
 
 import board.Board;
 import board.Square;
-import pieces.King;
 import pieces.Piece;
 import pieces.PieceSet;
 
-import java.util.List;
 
 public class MoveValidator {
 
@@ -87,6 +85,8 @@ public class MoveValidator {
             x = (char) (kingF + i);
             y = kingR + i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -106,6 +106,8 @@ public class MoveValidator {
             x = (char) (kingF - i);
             y = kingR + i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -125,6 +127,8 @@ public class MoveValidator {
             x = (char) (kingF + i);
             y = kingR - i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -144,6 +148,8 @@ public class MoveValidator {
             x = (char) (kingF - i);
             y = kingR - i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -162,6 +168,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingRight; i++) {
             x = (char) (kingF + i);
             y = kingR ;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -180,6 +188,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingLeft; i++) {
             x = (char) (kingF - i);
             y = kingR ;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -198,6 +208,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingAbove; i++) {
             x = kingF;
             y = kingR + i;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -216,6 +228,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingBelow; i++) {
             x = kingF;
             y = kingR - i;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(Board.getSquare(x,y).getCurrentPiece().getColor() != move.getPiece().getColor() ||
@@ -370,6 +384,8 @@ public class MoveValidator {
             x = (char) (kingF + i);
             y = kingR + i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(diagonalObstacle(x,y,color)) {
@@ -384,6 +400,8 @@ public class MoveValidator {
             x = (char) (kingF - i);
             y = kingR + i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(diagonalObstacle(x,y,color)) {
@@ -398,6 +416,8 @@ public class MoveValidator {
             x = (char) (kingF + i);
             y = kingR - i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(diagonalObstacle(x,y,color)) {
@@ -412,6 +432,8 @@ public class MoveValidator {
             x = (char) (kingF - i);
             y = kingR - i;
             // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(diagonalObstacle(x,y,color)) {
@@ -425,6 +447,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingRight; i++) {
             x = (char) (kingF + i);
             y = kingR ;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(linearObstacle(x,y,color)) {
@@ -438,6 +462,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingLeft; i++) {
             x = (char) (kingF - i);
             y = kingR ;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(linearObstacle(x,y,color)) {
@@ -451,6 +477,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingAbove; i++) {
             x = kingF;
             y = kingR + i;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(linearObstacle(x,y,color)) {
@@ -464,6 +492,8 @@ public class MoveValidator {
         for (int i = 1; i <= kingBelow; i++) {
             x = kingF;
             y = kingR - i;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
             if (Board.getSquare(x,y).getCurrentPiece() == null)
                 continue;
             if(linearObstacle(x,y,color)) {
