@@ -2,6 +2,7 @@ package util;
 
 import board.Board;
 import pieces.Piece;
+import pieces.PieceSet;
 import ui.*;
 
 import javax.swing.*;
@@ -48,7 +49,9 @@ public class GameModel extends Observable {
         moveHistoryPanel.printMove(move);
         boardPanel.executeMove(move);
         switchTimer(move);
-        if (MoveValidator.isCheckMove(move)) {
+        if (MoveValidator.isCheckMove(move,
+                PieceSet.getOpponentKingFile(move.getPiece().getColor()),
+                PieceSet.getOpponentKingRank(move.getPiece().getColor()))) {
             if (MoveValidator.isCheckMate(move)) {
                 stopTimer();
                 gameFrame.showCheckmateDialog();

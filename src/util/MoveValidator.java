@@ -63,13 +63,11 @@ public class MoveValidator {
         return true;
     }
 
-    public static boolean isCheckMove(Move move) {
+    public static boolean isCheckMove(Move move, char kingF, int kingR) {
         // TODO-check
         System.out.println(move.getPiece().getColor()); // black
         System.out.println(currentMoveColor);
         // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
-        char kingF = PieceSet.getOpponentKingFile(move.getPiece().getColor()); // white
-        int kingR = PieceSet.getOpponentKingRank(move.getPiece().getColor());
         System.out.println(kingF);
         System.out.println(kingR);
         // king 의 상하 좌우 위치
@@ -282,7 +280,7 @@ public class MoveValidator {
                 return true;
 
         }
-        //폰이랑 킹 위치 확인
+        //폰 위치 확인
         x = (char)(kingF + 1);
         y = kingR - 1;
         if ( 'a' <= x && x <= 'h' && 1<= y && y <= 8 ) {
@@ -337,6 +335,8 @@ public class MoveValidator {
         char kingF = PieceSet.getOpponentKingFile(move.getPiece().getColor());
         int kingR = PieceSet.getOpponentKingRank(move.getPiece().getColor());
         Piece.Color kingColor = move.getPiece().getColor();
+        char x;
+        int y;
 
         if (kingColor.equals(Piece.Color.WHITE)) {
             kingColor = Piece.Color.BLACK;
@@ -349,49 +349,186 @@ public class MoveValidator {
             return false;
         }
         //왕이 그 애를 처치했는데 무사하면 괜찮음
-        if (!(kingAttack(kingColor,move.getDestinationFile(),move.getDestinationRank(),kingF,kingR)))
+        if (!kingAttack(kingColor,move.getDestinationFile(),move.getDestinationRank(),kingF,kingR) &&
+                (Math.abs(move.getDestinationFile() - kingF) <= 1 && Math.abs(move.getDestinationRank()-kingR) <= 1)) {
             return false;
+        }
 
         //왕과 그 사이에 있는 공간에 다른애가 들어올 수 있으면 괜찮음
         if (thisPiece.getType() == Piece.Type.BISHOP) {
-
+            if (move.getDestinationRank() > kingR) {
+                if(move.getDestinationFile() > kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() - i);
+                        y = move.getDestinationRank() - i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() + i);
+                        y = move.getDestinationRank() - i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                if(move.getDestinationFile() > kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() - i);
+                        y = move.getDestinationRank() + i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() + i);
+                        y = move.getDestinationRank() + i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                }
+            }
         }
         else if (thisPiece.getType() == Piece.Type.ROOK) {
-
+            if (move.getDestinationRank() > kingR) {
+                for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                    x = move.getDestinationFile() ;
+                    y = move.getDestinationRank() - i;
+                    if (suicideSquad(thisPiece.getColor(),x,y)) {
+                        return false;
+                    }
+                }
+            } else if (move.getDestinationRank() < kingR) {
+                for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                    x = move.getDestinationFile();
+                    y = move.getDestinationRank() + i;
+                    if (suicideSquad(thisPiece.getColor(),x,y)) {
+                        return false;
+                    }
+                }
+            } else if(move.getDestinationFile() > kingF) {
+                for (int i = 1; i < Math.abs(move.getDestinationFile() - kingF); i++) {
+                    x = (char) (move.getDestinationFile() - i);
+                    y = move.getDestinationRank() ;
+                    if (suicideSquad(thisPiece.getColor(),x,y)) {
+                        return false;
+                    }
+                }
+            } else if(move.getDestinationFile() < kingF) {
+                for (int i = 1; i < Math.abs(move.getDestinationFile() - kingF); i++) {
+                    x = (char) (move.getDestinationFile() + i);
+                    y = move.getDestinationRank() ;
+                    if (suicideSquad(thisPiece.getColor(),x,y)) {
+                        return false;
+                    }
+                }
+            }
         }
         else if (thisPiece.getType() == Piece.Type.QUEEN) {
-
+            if (move.getDestinationRank() > kingR) {
+                if(move.getDestinationFile() > kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() - i);
+                        y = move.getDestinationRank() - i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else if (move.getDestinationFile() < kingF){
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() + i);
+                        y = move.getDestinationRank() - i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else if (move.getDestinationFile() == kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = move.getDestinationFile() ;
+                        y = move.getDestinationRank() - i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                }
+            } else if (move.getDestinationRank() < kingR){
+                if(move.getDestinationFile() > kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() - i);
+                        y = move.getDestinationRank() + i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else if (move.getDestinationFile() < kingF){
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = (char) (move.getDestinationFile() + i);
+                        y = move.getDestinationRank() + i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else if (move.getDestinationFile() == kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationRank() - kingR); i++) {
+                        x = move.getDestinationFile();
+                        y = move.getDestinationRank() + i;
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                }
+            } else if (move.getDestinationRank() == kingR) {
+                if(move.getDestinationFile() > kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationFile() - kingF); i++) {
+                        x = (char) (move.getDestinationFile() - i);
+                        y = move.getDestinationRank();
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                } else if (move.getDestinationFile() < kingF) {
+                    for (int i = 1; i < Math.abs(move.getDestinationFile() - kingF); i++) {
+                        x = (char) (move.getDestinationFile() + i);
+                        y = move.getDestinationRank();
+                        if (suicideSquad(thisPiece.getColor(),x,y)) {
+                            return false;
+                        }
+                    }
+                }
+            }
         }
 
 
         //왕이 그자리에서 피할 수 있는 경우가 하나라도 있으면 괜찮음
-        if (kingAvoidence(move, kingColor , (char)(kingF + 1), kingR) ||
-                kingAvoidence(move, kingColor , (char)(kingF + 1), kingR + 1) ||
-                kingAvoidence(move, kingColor , (char)(kingF + 1), kingR - 1) ||
-                kingAvoidence(move, kingColor , (char)(kingF - 1), kingR) ||
-                kingAvoidence(move, kingColor , (char)(kingF - 1), kingR + 1) ||
-                kingAvoidence(move, kingColor , (char)(kingF - 1), kingR - 1) ||
-                kingAvoidence(move, kingColor , kingF , kingR + 1) ||
-                kingAvoidence(move, kingColor , kingF , kingR - 1)
+        if (kingAvoid(kingColor , (char)(kingF + 1), kingR) ||
+                kingAvoid(kingColor , (char)(kingF + 1), kingR + 1) ||
+                kingAvoid(kingColor , (char)(kingF + 1), kingR - 1) ||
+                kingAvoid(kingColor , (char)(kingF - 1), kingR) ||
+                kingAvoid(kingColor , (char)(kingF - 1), kingR + 1) ||
+                kingAvoid(kingColor , (char)(kingF - 1), kingR - 1) ||
+                kingAvoid(kingColor , kingF , kingR + 1) ||
+                kingAvoid(kingColor , kingF , kingR - 1)
         ) {
-            return true;
+            return false;
         }
 
 
         return true;
     }
     //king이 F,R 로 피할 수 있으면 true 반환
-    private  static  boolean kingAvoidence(Move move, Piece.Color kingColor ,char kingF, int kingR) {
+    private static  boolean kingAvoid(Piece.Color kingColor, char kingF, int kingR) {
         if ( 'a' < kingF && kingF < 'h'&& 1 < kingR && kingR < 8) {
-            if (Board.getSquare(kingF, kingR).getCurrentPiece() == null) {
-                if (kingAttack(kingColor, move.getDestinationFile(), move.getDestinationRank(), kingF , kingR)) {
+            if (Board.getSquare(kingF, kingR).getCurrentPiece() == null
+                || Board.getSquare(kingF , kingR).getCurrentPiece().getColor() != kingColor) {
+                if (!longLiveTheKing(kingColor,kingF,kingR)) {
                     return true;
                 }
-            }
-            if (Board.getSquare(kingF , kingR).getCurrentPiece().getColor() != kingColor) {
-                if (kingAttack(kingColor, move.getDestinationFile(), move.getDestinationRank(), kingF, kingR)) {
-                    return true;
-                }
+                return false;
             }
         }
         return false;
@@ -401,9 +538,7 @@ public class MoveValidator {
     private static boolean kingAttack(Piece.Color kingColor, char moveF , int moveR, char kingF, int kingR) {
         PieceSet.setKingFile(kingColor , moveF);
         PieceSet.setKingRank(kingColor , moveR);
-        if (MoveValidator.longLiveTheKing(kingColor,
-                moveF,
-                moveR)) {
+        if (MoveValidator.longLiveTheKing(kingColor, moveF, moveR)) {
             PieceSet.setKingFile(kingColor, kingF);
             PieceSet.setKingRank(kingColor, kingR);
             return false;
@@ -414,7 +549,7 @@ public class MoveValidator {
     }
 
     // 색과 위치를 지정하고 그 위치로 가면 그 색을 가진 말이 위험할 경우 true 를 반환
-    public static boolean longLiveTheKing(Piece.Color color, char kingFile, int kingRank) {
+    private static boolean longLiveTheKing(Piece.Color color, char kingFile, int kingRank) {
 
         // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
         char kingF = kingFile; // white
@@ -632,6 +767,45 @@ public class MoveValidator {
             }
         }
 
+        // 상대 킹 위치 확인하기
+        for (int i = 0; i < 8 ; i++) {
+            x = 'a';
+            y = 1;
+            if (i==0) {
+                x = (char)(kingF + 1);
+                y = kingR ;
+            } else if (i==1) {
+                x = (char)(kingF + 1);
+                y = kingR - 1;
+            } else if (i==2) {
+                x = (char)(kingF + 1);
+                y = kingR + 1;
+            } else if (i==3) {
+                x = (char)(kingF - 1);
+                y = kingR + 1;
+            } else if (i==4) {
+                x = (char)(kingF - 1);
+                y = kingR ;
+            } else if (i==5) {
+                x = (char)(kingF - 1);
+                y = kingR - 1;
+            } else if (i==6) {
+                x = kingF ;
+                y = kingR + 1;
+            } else if (i==7) {
+                x = kingF ;
+                y = kingR - 1;
+            }
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if (Board.getSquare(x, y).getCurrentPiece().getColor() != color &&
+                    Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.KING)
+                return true;
+
+        }
+
         return false;
     }
     private static boolean diagonalObstacle(char x, int y, Piece.Color color) {
@@ -672,6 +846,210 @@ public class MoveValidator {
         }
         originSquare.setCurrentPiece(tmp);
         destinationSquare.setCurrentPiece(tmp2);
+        return false;
+    }
+
+    // 왕을 지키기 위해 그 자리로 올 수 있는 말이 있는지 확인 color는 공격하는 쪽의 color
+    private static boolean suicideSquad(Piece.Color color, char File, int Rank) {
+
+        char kingF = File; // white
+        int kingR = Rank;
+        System.out.println(kingF);
+        System.out.println(kingR);
+        // king 의 상하 좌우 위치
+        int kingRight = 'h' - kingF;
+        int kingLeft = kingF - 'a';
+        int kingAbove = 8 - kingR;
+        int kingBelow = kingR - 1;
+        // squre 칸 할당할 변수 두개
+        char x;
+        int y;
+        // 오른쪽 위 대각선 체크하기
+        for (int i = 1; i <= Math.min(kingRight,kingAbove); i++) {
+            x = (char) (kingF + i);
+            y = kingR + i;
+            // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //왼쪽 위 대각선 확인하기
+        for (int i = 1; i <= Math.min(kingLeft,kingAbove); i++) {
+            x = (char) (kingF - i);
+            y = kingR + i;
+            // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //오른쪽 아래 대각선 확인하기
+        for (int i = 1; i <= Math.min(kingRight,kingBelow); i++) {
+            x = (char) (kingF + i);
+            y = kingR - i;
+            // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //왼쪽 아래 대각선 확인하기
+        for (int i = 1; i <= Math.min(kingLeft,kingBelow); i++) {
+            x = (char) (kingF - i);
+            y = kingR - i;
+            // 대각에서 공격가능하면 check
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(diagonalObstacle(x,y,color)) {
+                break;
+            }
+            if(diagonalOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //오른쪽 직선 확인하기
+        for (int i = 1; i <= kingRight; i++) {
+            x = (char) (kingF + i);
+            y = kingR ;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //왼쪽 직선 확인하기
+        for (int i = 1; i <= kingLeft; i++) {
+            x = (char) (kingF - i);
+            y = kingR ;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //위 직선 확인하기
+        for (int i = 1; i <= kingAbove; i++) {
+            x = kingF;
+            y = kingR + i;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        //아래 직선 확인하기
+        for (int i = 1; i <= kingBelow; i++) {
+            x = kingF;
+            y = kingR - i;
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if(linearObstacle(x,y,color)) {
+                break;
+            }
+            if(linearOpponent(x,y,color)) {
+                return true;
+            }
+        }
+        // 나이트 위치 확인하기
+        for (int i = 0; i < 8 ; i++) {
+            x = 'a';
+            y = 1;
+            if (i==0) {
+                x = (char)(kingF + 2);
+                y = kingR + 1;
+            } else if (i==1) {
+                x = (char)(kingF + 2);
+                y = kingR - 1;
+            } else if (i==2) {
+                x = (char)(kingF + 1);
+                y = kingR + 2;
+            } else if (i==3) {
+                x = (char)(kingF - 1);
+                y = kingR + 2;
+            } else if (i==4) {
+                x = (char)(kingF - 2);
+                y = kingR + 1;
+            } else if (i==5) {
+                x = (char)(kingF - 2);
+                y = kingR - 1;
+            } else if (i==6) {
+                x = (char)(kingF - 1);
+                y = kingR + 2;
+            } else if (i==7) {
+                x = (char)(kingF - 1);
+                y = kingR - 2;
+            }
+            if ( x < 'a' || x > 'h'|| y < 1|| y > 8 )
+                continue;
+            if (Board.getSquare(x,y).getCurrentPiece() == null)
+                continue;
+            if (Board.getSquare(x, y).getCurrentPiece().getColor() != color &&
+                    Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.KNIGHT)
+                return true;
+
+        }
+        //폰이랑 킹 위치 확인
+        if (color == Piece.Color.BLACK) {
+            x = kingF ;
+            y = kingR - 1;
+            if ('a' <= x && x <= 'h' && 1 <= y && y <= 8) {
+                if ((Board.getSquare(x, y).getCurrentPiece() != null)) {
+                    if (Board.getSquare(x, y).getCurrentPiece().getColor() == Piece.Color.WHITE &&
+                            Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.PAWN)
+                        return true;
+                }
+            }
+
+        } else {
+            x = kingF ;
+            y = kingR + 1;
+            if ('a' <= x && x <= 'h' && 1 <= y && y <= 8) {
+                if (Board.getSquare(x, y).getCurrentPiece() != null) {
+                    if (Board.getSquare(x, y).getCurrentPiece().getColor() == Piece.Color.BLACK &&
+                            Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.PAWN)
+                        return true;
+                }
+            }
+        }
+
         return false;
     }
 
