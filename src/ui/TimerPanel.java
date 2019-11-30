@@ -24,6 +24,10 @@ public class TimerPanel extends JPanel implements Observer {
     private JLabel blackTimerDigitsLabel;
     private JPanel blackTimerStatusPanel;
 
+
+    private static long wTime = -32400000L;
+    private static long bTime = -32400000L;
+
     public TimerPanel(GameModel gameModel) {
         super(new BorderLayout());
         this.gameModel = gameModel;
@@ -35,7 +39,11 @@ public class TimerPanel extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
+        if (arg == whiteTime ) {
+            wTime += 1000;
+        } else if (arg == blackTime) {
+            bTime += 1000;
+        }
     }
 
     public void whiteTimerTikTok() {
@@ -46,10 +54,16 @@ public class TimerPanel extends JPanel implements Observer {
             Show whiteTimerStatusPanel
             Blind blackTimerStatusPanel
          */
+        update(gameModel,whiteTime);
+        whiteTime.setTime(wTime);
+        whiteTimerDigitsLabel.setText(whiteTime.toString());
     }
 
     public void blackTimerTikTok() {
         // TODO-timer: same with whiteTimerTikTok
+        update(gameModel,blackTime);
+        blackTime.setTime(bTime);
+        blackTimerDigitsLabel.setText(blackTime.toString());
     }
 
     private void initialize() {

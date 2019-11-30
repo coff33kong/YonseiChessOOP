@@ -75,6 +75,7 @@ public class GameModel extends Observable {
     }
 
     private void initializeTimers() {
+        // 밀리세컨드
         whiteTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,10 +95,21 @@ public class GameModel extends Observable {
         TODO-timer
             start and stop whiteTimer and blackTimer
          */
+        if (move.getPiece().getColor() == Piece.Color.WHITE) {
+            whiteTimer.stop();
+            blackTimer.start();
+        } else {
+            blackTimer.stop();
+            whiteTimer.start();
+
+        }
+
     }
 
     private void stopTimer() {
         // TODO-timer: stop timers
+        whiteTimer.stop();
+        blackTimer.stop();
     }
 
     public BoardPanel getBoardPanel() {
