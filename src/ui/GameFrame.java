@@ -48,6 +48,10 @@ public class GameFrame extends JFrame implements Observer{
 
     }
 
+    public void showStaleMateDialog() {
+        JOptionPane.showMessageDialog(this, "That's a Stalemate!", "Stalemate", JOptionPane.WARNING_MESSAGE);
+    }
+
     public void showCheckDialog() {
         JOptionPane.showMessageDialog(this, "That's a Check!", "Check", JOptionPane.WARNING_MESSAGE);
     }

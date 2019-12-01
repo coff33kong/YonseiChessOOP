@@ -6,6 +6,7 @@ import pieces.PieceSet;
 import ui.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -49,6 +50,10 @@ public class GameModel extends Observable {
         moveHistoryPanel.printMove(move);
         boardPanel.executeMove(move);
         switchTimer(move);
+        if (MoveValidator.isStaleMate(move)) {
+            stopTimer();
+            gameFrame.showStaleMateDialog();
+        }
         if (MoveValidator.isCheckMove(move,
                 PieceSet.getOpponentKingFile(move.getPiece().getColor()),
                 PieceSet.getOpponentKingRank(move.getPiece().getColor()))) {

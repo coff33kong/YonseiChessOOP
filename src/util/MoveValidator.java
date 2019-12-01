@@ -67,7 +67,8 @@ public class MoveValidator {
         // TODO-check
         System.out.println(move.getPiece().getColor()); // black
         System.out.println(currentMoveColor);
-        // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
+        // king's location
+        // king 은 move.getPiece().getColor()에 반대되는 색이다.
         System.out.println(kingF);
         System.out.println(kingR);
         // king 의 상하 좌우 위치
@@ -1242,9 +1243,10 @@ public class MoveValidator {
         return false;
     }
 
-
+    // 상대편이 움직였을 때 우리편이 움직일 수 있는 말이 하나도 없는 경우
     public static boolean isStaleMate(Move move) {
-        // TODO-check 추가적으로 할만한거
+        // TODO-stalemate 추가적으로 할만한거
+
         return false;
     }
 

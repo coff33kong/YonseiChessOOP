@@ -138,6 +138,7 @@ public class PreferencesFrame extends JFrame {
         setNetworkSettingsEnabled(false);
         // Timer
         stopwatchRadioButton.setSelected(true);
+        countdownRadioButton.setSelected(false);
         // Custom Pieces
         customPiecesCheckBox.setEnabled(false);
         customPiecesPanel.setEnabled(false);
@@ -215,7 +216,6 @@ public class PreferencesFrame extends JFrame {
         // timer settings
         timerModeLabel = new JLabel("Timer Mode: ");
         countdownRadioButton = new JRadioButton("Countdown");
-        countdownRadioButton.setEnabled(false);
         countdownRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

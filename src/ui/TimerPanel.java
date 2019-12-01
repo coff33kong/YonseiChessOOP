@@ -1,6 +1,8 @@
 package ui;
 
+import util.Core;
 import util.GameModel;
+import util.Preferences;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +59,7 @@ public class TimerPanel extends JPanel implements Observer {
         update(gameModel,whiteTime);
         whiteTime.setTime(wTime);
         whiteTimerDigitsLabel.setText(whiteTime.toString());
+        setBackgroundColor(Color.WHITE);
     }
 
     public void blackTimerTikTok() {
@@ -64,37 +67,61 @@ public class TimerPanel extends JPanel implements Observer {
         update(gameModel,blackTime);
         blackTime.setTime(bTime);
         blackTimerDigitsLabel.setText(blackTime.toString());
+        setBackgroundColor(Color.BLACK);
+    }
+
+    private void setBackgroundColor(Color color) {
+        if (Color.WHITE.equals(color)) {
+            whiteTimerStatusPanel.setVisible(true);
+            blackTimerStatusPanel.setVisible(false);
+        } else {
+            blackTimerStatusPanel.setVisible(true);
+            whiteTimerStatusPanel.setVisible(false);
+        }
     }
 
     private void initialize() {
-        whiteTimerDigitsLabel = new JLabel(whiteTime.toString());
-        whiteTimerDigitsLabel.setFont(whiteTimerDigitsLabel.getFont().deriveFont(48f));
-        whiteTimerDigitsPanel = new JPanel();
-        whiteTimerDigitsPanel.add(whiteTimerDigitsLabel);
-        whiteTimerStatusPanel = new JPanel();
-        whiteTimerStatusPanel.setBackground(Color.WHITE);
-        whiteTimerPanel = new JPanel(new BorderLayout());
-        whiteTimerPanel.add(whiteTimerDigitsPanel, BorderLayout.LINE_START);
-        whiteTimerPanel.add(whiteTimerStatusPanel, BorderLayout.CENTER);
-        whiteTimerPanel.setBorder(BorderFactory.createTitledBorder("White"));
+        Preferences preferences = Core.getPreferences();
+        switch (preferences.getTimerMode()) {
+            case STOPWATCH:
+                whiteTimerDigitsLabel = new JLabel(whiteTime.toString());
+                whiteTimerDigitsLabel.setFont(whiteTimerDigitsLabel.getFont().deriveFont(48f));
+                whiteTimerDigitsPanel = new JPanel();
+                whiteTimerDigitsPanel.add(whiteTimerDigitsLabel);
+                whiteTimerStatusPanel = new JPanel();
+                whiteTimerStatusPanel.setBackground(Color.WHITE);
+                whiteTimerPanel = new JPanel(new BorderLayout());
+                whiteTimerPanel.add(whiteTimerDigitsPanel, BorderLayout.LINE_START);
+                whiteTimerPanel.add(whiteTimerStatusPanel, BorderLayout.CENTER);
+                whiteTimerPanel.setBorder(BorderFactory.createTitledBorder("White"));
 
-        blackTimerDigitsLabel = new JLabel(blackTime.toString());
-        blackTimerDigitsLabel.setFont(blackTimerDigitsLabel.getFont().deriveFont(48f));
-        blackTimerDigitsPanel = new JPanel();
-        blackTimerDigitsPanel.add(blackTimerDigitsLabel);
-        blackTimerStatusPanel = new JPanel();
-        blackTimerStatusPanel.setBackground(Color.BLACK);
-        blackTimerPanel = new JPanel(new BorderLayout());
-        blackTimerPanel.add(blackTimerDigitsPanel, BorderLayout.LINE_START);
-        blackTimerPanel.add(blackTimerStatusPanel, BorderLayout.CENTER);
-        blackTimerPanel.setBorder(BorderFactory.createTitledBorder("Black"));
+                blackTimerDigitsLabel = new JLabel(blackTime.toString());
+                blackTimerDigitsLabel.setFont(blackTimerDigitsLabel.getFont().deriveFont(48f));
+                blackTimerDigitsPanel = new JPanel();
+                blackTimerDigitsPanel.add(blackTimerDigitsLabel);
+                blackTimerStatusPanel = new JPanel();
+                blackTimerStatusPanel.setBackground(Color.BLACK);
+                blackTimerPanel = new JPanel(new BorderLayout());
+                blackTimerPanel.add(blackTimerDigitsPanel, BorderLayout.LINE_START);
+                blackTimerPanel.add(blackTimerStatusPanel, BorderLayout.CENTER);
+                blackTimerPanel.setBorder(BorderFactory.createTitledBorder("Black"));
 
-        displayPanel = new JPanel(new GridLayout(2, 1));
-        displayPanel.add(whiteTimerPanel);
-        displayPanel.add(blackTimerPanel);
+                displayPanel = new JPanel(new GridLayout(2, 1));
+                displayPanel.add(whiteTimerPanel);
+                displayPanel.add(blackTimerPanel);
 
-        this.add(displayPanel, BorderLayout.CENTER);
-        this.setPreferredSize(new Dimension(300, 200));
+                this.add(displayPanel, BorderLayout.CENTER);
+                this.setPreferredSize(new Dimension(300, 200));
+                break;
+
+            case COUNTDOWN:
+                displayPanel = new JPanel(new GridLayout(1, 1));
+
+
+                this.add(displayPanel, BorderLayout.CENTER);
+                this.setPreferredSize(new Dimension(300, 200));
+                break;
+        }
     }
 
 }
