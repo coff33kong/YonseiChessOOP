@@ -18,4 +18,5 @@ public class Square {
         return this.currentPiece;
     }
 
+
 }

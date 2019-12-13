@@ -47,6 +47,8 @@ public class PieceSet {
     public static void addCapturedPiece(Piece piece) {
         piece.setCapture(true);
         capturedPieceSet.get(piece.getColor()).push(piece);
+        //TODO - 살아있는 말들 추적하기
+        pieceSet.get(piece.getColor()).get(piece.type).remove(piece);
     }
 
     public static List<Piece> getCapturedPieces(Piece.Color color) {

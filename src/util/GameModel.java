@@ -50,10 +50,7 @@ public class GameModel extends Observable {
         moveHistoryPanel.printMove(move);
         boardPanel.executeMove(move);
         switchTimer(move);
-        if (MoveValidator.isStaleMate(move)) {
-            stopTimer();
-            gameFrame.showStaleMateDialog();
-        }
+
         if (MoveValidator.isCheckMove(move,
                 PieceSet.getOpponentKingFile(move.getPiece().getColor()),
                 PieceSet.getOpponentKingRank(move.getPiece().getColor()))) {
@@ -64,6 +61,12 @@ public class GameModel extends Observable {
                 gameFrame.showCheckDialog();
             }
         }
+//        else if (MoveValidator.isStaleMate(move.getPiece().getColor(),
+//                PieceSet.getOpponentKingFile(move.getPiece().getColor()),
+//                PieceSet.getOpponentKingRank(move.getPiece().getColor()))) {
+//            stopTimer();
+//            gameFrame.showStaleMateDialog();
+//        }
         move.getPiece().setMoved(true);
     }
 

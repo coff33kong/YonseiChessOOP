@@ -52,6 +52,7 @@ public class Board {
     }
 
 
+
     private static void initializeSquares() {
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {

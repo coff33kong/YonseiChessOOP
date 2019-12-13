@@ -1,5 +1,7 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
 import board.Board;
 import board.Square;
 import pieces.Piece;
@@ -65,12 +67,8 @@ public class MoveValidator {
 
     public static boolean isCheckMove(Move move, char kingF, int kingR) {
         // TODO-check
-        System.out.println(move.getPiece().getColor()); // black
-        System.out.println(currentMoveColor);
         // king's location
         // king 은 move.getPiece().getColor()에 반대되는 색이다.
-        System.out.println(kingF);
-        System.out.println(kingR);
         // king 의 상하 좌우 위치
         int kingRight = 'h' - kingF;
         int kingLeft = kingF - 'a';
@@ -527,7 +525,7 @@ public class MoveValidator {
     }
     //king이 F,R 로 피할 수 있으면 true 반환
     private static  boolean kingAvoid(Piece.Color kingColor, char kingF, int kingR) {
-        if ( 'a' < kingF && kingF < 'h'&& 1 < kingR && kingR < 8) {
+        if ( 'a' <= kingF && kingF <= 'h'&& 1 <= kingR && kingR <= 8) {
             if (Board.getSquare(kingF, kingR).getCurrentPiece() == null
                 || Board.getSquare(kingF , kingR).getCurrentPiece().getColor() != kingColor) {
                 if (!longLiveTheKing(kingColor,kingF,kingR)) {
@@ -540,7 +538,7 @@ public class MoveValidator {
     }
 
     // 특정 색을 지닌 킹이 이동할 경우 안전한지 확인
-    private static boolean kingAttack(Piece.Color kingColor, char moveF , int moveR, char kingF, int kingR) {
+    public static boolean kingAttack(Piece.Color kingColor, char moveF , int moveR, char kingF, int kingR) {
         PieceSet.setKingFile(kingColor , moveF);
         PieceSet.setKingRank(kingColor , moveR);
         if (longLiveTheKing(kingColor, moveF, moveR)) {
@@ -555,13 +553,11 @@ public class MoveValidator {
     }
 
     // 색과 위치를 지정하고 그 위치로 가면 그 색을 가진 말이 위험할 경우 true 를 반환
-    private static boolean longLiveTheKing(Piece.Color color, char kingFile, int kingRank) {
+    public static boolean longLiveTheKing(Piece.Color color, char kingFile, int kingRank) {
 
         // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
         char kingF = kingFile; // white
         int kingR = kingRank;
-        System.out.println(kingF);
-        System.out.println(kingR);
         char x;
         int y;
 
@@ -615,8 +611,6 @@ public class MoveValidator {
         // king's location king 은 move.getPiece().getColor()에 반대되는 색이다.
         char kingF = kingFile; // white
         int kingR = kingRank;
-        System.out.println(kingF);
-        System.out.println(kingR);
         // king 의 상하 좌우 위치
         int kingRight = 'h' - kingF;
         int kingLeft = kingF - 'a';
@@ -877,8 +871,6 @@ public class MoveValidator {
 
         char kingF = File; // white
         int kingR = Rank;
-        System.out.println(kingF);
-        System.out.println(kingR);
         // king 의 상하 좌우 위치
         int kingRight = 'h' - kingF;
         int kingLeft = kingF - 'a';
@@ -1080,11 +1072,6 @@ public class MoveValidator {
         // TODO-movement
         // check the piece
         Piece thisPiece = Board.getSquare(move.getOriginFile(), move.getOriginRank()).getCurrentPiece();
-        System.out.print(move.getDestinationFile() );
-        System.out.println(move.getDestinationRank());
-        System.out.print(move.getOriginFile() );
-        System.out.println(move.getOriginRank());
-        System.out.println(currentMoveColor);
 
         if (thisPiece.getType() == Piece.Type.PAWN) {
             if (thisPiece.getColor() == Piece.Color.WHITE) {
@@ -1243,11 +1230,74 @@ public class MoveValidator {
         return false;
     }
 
-    // 상대편이 움직였을 때 우리편이 움직일 수 있는 말이 하나도 없는 경우
-    public static boolean isStaleMate(Move move) {
-        // TODO-stalemate 추가적으로 할만한거
+    // 상대편이 움직였을 때 우리편 왕이 움직일 수 있는 곳이 모두 체크인 경우
+    public static boolean isStaleMate(Piece.Color color, char kingF, int kingR) {
+        // TODO-stalemate
+        Piece.Color kingColor = color;
+        if (kingColor.equals(Piece.Color.WHITE)) {
+            kingColor = Piece.Color.BLACK;
+        } else {
+            kingColor = Piece.Color.WHITE;
+        }
 
-        return false;
+        List<Piece> alivePieceSet =  PieceSet.getPieces(kingColor);
+
+        //왕이 그자리에서 움직여서 체크 안되는 경우가 하나라도 있으면 괜찮음
+        if ( 'a' <= kingF && kingF <= 'h'&& 1 <= kingR && kingR <= 8) {
+            if (kingAvoid(kingColor, (char) (kingF + 1), kingR) ||
+                    kingAvoid(kingColor, (char) (kingF + 1), kingR + 1) ||
+                    kingAvoid(kingColor, (char) (kingF + 1), kingR - 1) ||
+                    kingAvoid(kingColor, (char) (kingF - 1), kingR) ||
+                    kingAvoid(kingColor, (char) (kingF - 1), kingR + 1) ||
+                    kingAvoid(kingColor, (char) (kingF - 1), kingR - 1) ||
+                    kingAvoid(kingColor, kingF, kingR + 1) ||
+                    kingAvoid(kingColor, kingF, kingR - 1)) {
+                return false;
+
+            } else {
+                // TODO - Stalemate 모두 check 가 된다면 kingColor인 애들 중에서 움직일 수 있는 애가 있는지 확인해야한다.
+                for (int i = 0; i < alivePieceSet.size(); i++) {
+                    if (alivePieceSet.get(i).getType() == Piece.Type.PAWN){
+
+                    }
+                }
+            }
+//            System.out.println(kingColor);
+//            //왕주변에 null 인 애들 체크
+//            List nullF = new ArrayList<>();
+//            List nullR = new ArrayList<>();
+//
+//            //모두 우리편으로 싸여있을 경우
+//            addOpNullSpace(kingColor,(char) (kingF + 1), kingR, nullF, nullR);
+//            addOpNullSpace(kingColor,(char) (kingF + 1), kingR + 1, nullF, nullR);
+//            addOpNullSpace(kingColor,(char) (kingF + 1), kingR - 1, nullF, nullR);
+//            addOpNullSpace(kingColor,(char) (kingF - 1), kingR, nullF, nullR);
+//            addOpNullSpace(kingColor,(char) (kingF - 1), kingR + 1, nullF, nullR);
+//            addOpNullSpace(kingColor,(char) (kingF - 1), kingR - 1, nullF, nullR);
+//            addOpNullSpace(kingColor,kingF, kingR + 1, nullF, nullR);
+//            addOpNullSpace(kingColor,kingF, kingR - 1, nullF, nullR);
+//
+//            System.out.println(nullF.size());
+//            if (nullF.isEmpty()){
+//                return false;
+//            }
+
+
+
+
+
+        }
+        return true;
+    }
+
+    public static void addOpNullSpace(Piece.Color color, char x, int y, List nullF, List nullR) {
+        if ('a' <= x && x <= 'h'&& 1 <= y && y <= 8) {
+            if (Board.getSquare(x, y).getCurrentPiece() == null ||
+                    !Board.getSquare(x, y).getCurrentPiece().getColor().equals(color)) {
+                nullF.add(x);
+                nullR.add(y);
+            }
+        }
     }
 
 }

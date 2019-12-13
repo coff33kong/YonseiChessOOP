@@ -1,5 +1,6 @@
 package ui;
 
+import board.Board;
 import pieces.Piece;
 import pieces.PieceSet;
 import util.Core;
@@ -21,7 +22,7 @@ public class BoardPanel extends JPanel implements Observer {
     private boolean usingCustomPieces;
     private JLayeredPane boardLayeredPane;
     private JPanel boardPanel;
-    private JPanel[][] squarePanels;
+    private static JPanel[][] squarePanels;
 
     public BoardPanel(GameModel gameModel) {
         super(new BorderLayout());
@@ -33,6 +34,11 @@ public class BoardPanel extends JPanel implements Observer {
         initializePieces();
         gameModel.addObserver(this);
     }
+
+    public BoardPanel() {
+
+    }
+
 
     public void submitMoveRequest(char originFile, int originRank, char destinationFile, int destinationRank) {
         if (getSquarePanel(originFile, originRank).getComponent(0) != null ) {
@@ -76,7 +82,7 @@ public class BoardPanel extends JPanel implements Observer {
         boardLayeredPane.repaint();
     }
 
-    public JPanel getSquarePanel(char file, int rank) {
+    public static JPanel getSquarePanel(char file, int rank) {
         file = Character.toLowerCase(file);
         if (file < 'a' || file > 'h' || rank < 1 || rank > 8) {
             return null;
@@ -186,6 +192,27 @@ public class BoardPanel extends JPanel implements Observer {
     public boolean isBoardReversed() {
         return boardReversed;
     }
+
+    //TODO Castling
+    public static void changeRook(char originF, int originR, char destF, int destR) {
+        Piece piece1 = Board.getSquare(originF,originR).getCurrentPiece();
+
+        JPanel originSquarePanel = getSquarePanel(originF, originR);
+        JPanel destinationSquarePanel = getSquarePanel(destF, destR);
+
+
+        destinationSquarePanel.removeAll();
+        destinationSquarePanel.add(originSquarePanel.getComponent(0));
+        destinationSquarePanel.repaint();
+        originSquarePanel.removeAll();
+        originSquarePanel.repaint();
+
+        Board.getSquare(destF,destR).setCurrentPiece(piece1);
+        Board.getSquare(originF,originR).setCurrentPiece(null);
+
+
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {
