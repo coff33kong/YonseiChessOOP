@@ -105,7 +105,7 @@ public class PieceSet {
 
     private static void initializePieceSet() {
         /*
-        TODO-piece 일단 배치완료
+        TODO-piece
             Initialize pieces and put to pieceSet
             The structure of pieceSet is as following
                 pieceSet - collection by color - collection by category - each pieces

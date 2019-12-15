@@ -825,7 +825,8 @@ public class MoveValidator {
         return false;
     }
     private static boolean diagonalObstacle(char x, int y, Piece.Color color) {
-        return Board.getSquare(x,y).getCurrentPiece().getColor() == color ||
+        return (Board.getSquare(x,y).getCurrentPiece().getColor() == color &&
+                !(Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.KING))||
                 Board.getSquare(x,y).getCurrentPiece().getColor() != color &&
                         !(Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.BISHOP
                                 || Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.QUEEN);
@@ -836,7 +837,8 @@ public class MoveValidator {
                         || Board.getSquare(x, y).getCurrentPiece().getType() == Piece.Type.QUEEN);
     }
     private static boolean linearObstacle(char x, int y, Piece.Color color) {
-        return Board.getSquare(x,y).getCurrentPiece().getColor() == color ||
+        return (Board.getSquare(x,y).getCurrentPiece().getColor() == color &&
+                !(Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.KING)) ||
                 (Board.getSquare(x,y).getCurrentPiece().getColor() != color &&
                         !(Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.ROOK
                                 || Board.getSquare(x,y).getCurrentPiece().getType() == Piece.Type.QUEEN));
