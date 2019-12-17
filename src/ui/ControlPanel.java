@@ -28,7 +28,7 @@ public class ControlPanel extends JPanel implements Observer {
         this.setLayout(new GridLayout(0, 1));
 
         undoButton = new JButton("Request Undo");
-        undoButton.setEnabled(false);
+        undoButton.setEnabled(true);
         saveButton = new JButton("Save Game");
         saveButton.setEnabled(false);
         loadButton = new JButton("Load Game");
@@ -38,6 +38,16 @@ public class ControlPanel extends JPanel implements Observer {
         this.add(saveButton);
         this.add(loadButton);
         this.setPreferredSize(new Dimension(300, 200));
+
+        undoButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+//                if () {
+//
+//                } else if () {
+//
+//                }
+            }
+        });
     }
 
     @Override

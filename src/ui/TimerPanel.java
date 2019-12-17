@@ -57,6 +57,7 @@ public class TimerPanel extends JPanel implements Observer {
             } else if (arg == blackTime) {
                 bTime += 1000;
             }
+            //TODO COUNTDOWN
         } else if (preferences.getTimerMode() == Preferences.TimerMode.COUNTDOWN) {
             if (arg == whiteTime) {
                 wTime -= 1000;
@@ -138,7 +139,7 @@ public class TimerPanel extends JPanel implements Observer {
                 wTime = -32400000L;
                 bTime = -32400000L;
                 break;
-
+            //TODO COUNTDOWN
             case COUNTDOWN:
 
                 int getTime = preferences.getTimeLimit();
