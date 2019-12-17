@@ -32,6 +32,8 @@ public class TimerPanel extends JPanel implements Observer {
 
     public static long wTime ;
     public static long bTime ;
+    public static long lastwTime ;
+    public static long lastbTime ;
     private String timeLimit = "00:00:00";
 
     public TimerPanel(GameModel gameModel) {
@@ -81,6 +83,7 @@ public class TimerPanel extends JPanel implements Observer {
         whiteTime.setTime(wTime);
         whiteTimerDigitsLabel.setText(whiteTime.toString());
         setBackgroundColor(Color.WHITE);
+        setLastwTime(wTime);
     }
 
     public void blackTimerTikTok() {
@@ -89,7 +92,16 @@ public class TimerPanel extends JPanel implements Observer {
         blackTime.setTime(bTime);
         blackTimerDigitsLabel.setText(blackTime.toString());
         setBackgroundColor(Color.BLACK);
+        setLastbTime (bTime);
 
+    }
+
+    public void setLastwTime (long wTime) {
+        this.lastwTime = wTime;
+    }
+
+    public void setLastbTime (long bTime) {
+        this.lastbTime = bTime;
     }
 
     private void setBackgroundColor(Color color) {

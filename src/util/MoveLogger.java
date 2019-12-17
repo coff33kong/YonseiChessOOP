@@ -46,6 +46,23 @@ public class MoveLogger {
         }
     }
 
+    //TODO UNDO
+    public static Move popMove() {
+        if (moveRoundBuffer.size() == 0 && moveHistory.size() == 0) {
+            return null;
+        }
+        if (moveRoundBuffer.size()==1) {
+            Move lastMove = moveRoundBuffer.get(0);
+            moveRoundBuffer.clear();
+            return  lastMove;
+        } else {
+            Move lastMove = moveHistory.get(moveHistory.size() - 1).blackMove;
+            moveRoundBuffer.add(moveHistory.get(moveHistory.size() - 1).whiteMove);
+            moveHistory.remove(moveHistory.size()-1);
+            return lastMove;
+        }
+    }
+
     private void initialize() {
         moveHistory = new ArrayList<MoveRound>();
         moveRoundBuffer = new ArrayList<Move>();

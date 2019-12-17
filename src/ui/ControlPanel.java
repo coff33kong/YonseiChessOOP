@@ -41,11 +41,7 @@ public class ControlPanel extends JPanel implements Observer {
 
         undoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                if () {
-//
-//                } else if () {
-//
-//                }
+                gameModel.undoMove();
             }
         });
     }

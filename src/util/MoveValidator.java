@@ -22,6 +22,11 @@ public class MoveValidator {
 
     private static Piece.Color currentMoveColor;
 
+    public static void currentMoveChange() {
+        currentMoveColor = currentMoveColor.equals(Piece.Color.WHITE) ?
+                Piece.Color.BLACK : Piece.Color.WHITE;
+    }
+
     public static boolean validateMove(Move move) {
         return validateMove(move, false);
     }
@@ -337,14 +342,8 @@ public class MoveValidator {
         char x;
         int y;
 
-        if (kingColor.equals(Piece.Color.WHITE)) {
-            kingColor = Piece.Color.BLACK;
-        } else {
-            kingColor = Piece.Color.WHITE;
-        }
-
-
-
+        kingColor = kingColor.equals(Piece.Color.WHITE) ?
+                Piece.Color.BLACK : Piece.Color.WHITE;
 
         //왕이 아닌 애가 그 애를 처치할 수 있으면 괜찮음
         if (longLiveTheKing2(move.getPiece().getColor(), move.getDestinationFile(), move.getDestinationRank())) {

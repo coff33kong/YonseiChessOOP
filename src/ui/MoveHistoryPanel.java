@@ -43,6 +43,16 @@ public class MoveHistoryPanel extends JPanel implements Observer {
         });
     }
 
+    public void printUndo() {
+        moveHistoryContent += "Undo last Move!\n";
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                moveHistoryTextArea.setText(moveHistoryContent);
+            }
+        });
+    }
+
     private void initialize() {
         moveHistoryContent = new String("Game start!\n");
         moveHistoryTextArea = new JTextArea(moveHistoryContent);

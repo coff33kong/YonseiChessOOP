@@ -51,6 +51,13 @@ public class PieceSet {
         pieceSet.get(piece.getColor()).get(piece.type).remove(piece);
     }
 
+    public static void removeCapturedPiece(Piece piece) {
+        piece.setCapture(false);
+        capturedPieceSet.get(piece.getColor()).remove(piece);
+        //TODO - 살아있는 말들 추적하기
+        pieceSet.get(piece.getColor()).get(piece.type).add(piece);
+    }
+
     public static List<Piece> getCapturedPieces(Piece.Color color) {
         return capturedPieceSet.get(color);
     }
