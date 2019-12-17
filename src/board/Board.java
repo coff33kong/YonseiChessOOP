@@ -51,6 +51,24 @@ public class Board {
 
     }
 
+    //TODO undo
+    public static void undoMove(Move lastmove) {
+        Square originSquare = getSquare(lastmove.getOriginFile(), lastmove.getOriginRank());
+        Square destinationSquare = getSquare(lastmove.getDestinationFile(), lastmove.getDestinationRank());
+        //만약 죽인 말이 있었다면 부활시켜야함
+        if (lastmove.getCapturedPiece() != null ){
+            PieceSet.removeCapturedPiece(lastmove.getCapturedPiece());
+        }
+        // 옮긴자리는 무조건 null 만약 직업이 바뀌지 않았다면 프로모션이 안된것
+        if (destinationSquare.getCurrentPiece().getClass() == lastmove.getPiece().getClass()) {
+            originSquare.setCurrentPiece(destinationSquare.getCurrentPiece());
+            destinationSquare.setCurrentPiece(lastmove.getCapturedPiece());
+        } else if (originSquare.getCurrentPiece() != null){
+            originSquare.setCurrentPiece(new Pawn(lastmove.getPiece().getColor()));
+            destinationSquare.setCurrentPiece(lastmove.getCapturedPiece());
+        }
+    }
+
 
 
     private static void initializeSquares() {

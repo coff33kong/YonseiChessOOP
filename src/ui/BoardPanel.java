@@ -213,6 +213,25 @@ public class BoardPanel extends JPanel implements Observer {
 
     }
 
+    //TODO undo
+    public void undoPiece(Move lastmove) {
+
+        JPanel originSquarePanel = getSquarePanel(lastmove.getOriginFile(), lastmove.getOriginRank());
+        JPanel destinationSquarePanel = getSquarePanel(lastmove.getDestinationFile(), lastmove.getDestinationRank());
+        originSquarePanel.removeAll();
+        originSquarePanel.add(getPieceImageLabel(lastmove.getPiece()));
+        originSquarePanel.repaint();
+        if (lastmove.getCapturedPiece() == null){
+            destinationSquarePanel.removeAll();
+            destinationSquarePanel.repaint();
+        } else {
+            destinationSquarePanel.removeAll();
+            destinationSquarePanel.add(getPieceImageLabel(lastmove.getCapturedPiece()));
+            destinationSquarePanel.repaint();
+        }
+
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {

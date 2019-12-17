@@ -18,6 +18,8 @@ public class GameModel extends Observable {
     private TimerPanel timerPanel;
     private ControlPanel controlPanel;
     private MoveHistoryPanel moveHistoryPanel;
+    private Board board;
+    private MoveValidator moveValidator;
 
     private Timer whiteTimer;
     private Timer blackTimer;
@@ -70,6 +72,22 @@ public class GameModel extends Observable {
         move.getPiece().setMoved(true);
     }
 
+
+    //TODO UNDO
+    public void undoMove() {
+        Move lastMove = MoveLogger.popMove();
+        boardPanel.undoPiece(lastMove);
+        board.undoMove(lastMove);
+        moveHistoryPanel.printUndo();
+        moveValidator.currentMoveChange();
+        switchTimer2(lastMove);
+        if (lastMove.getPiece().getColor() == Piece.Color.WHITE) {
+            TimerPanel.wTime = TimerPanel.lastwTime;
+        } else {
+            TimerPanel.bTime = TimerPanel.lastbTime;
+        }
+    }
+
     public Piece queryPiece(char file, int rank) {
         return Board.getSquare(file, rank).getCurrentPiece();
     }
@@ -104,6 +122,22 @@ public class GameModel extends Observable {
             start and stop whiteTimer and blackTimer
          */
         if (move.getPiece().getColor() == Piece.Color.WHITE) {
+            whiteTimer.stop();
+            blackTimer.start();
+        } else {
+            blackTimer.stop();
+            whiteTimer.start();
+
+        }
+
+    }
+
+    private void switchTimer2(Move move) {
+        /*
+        TODO-timer
+            start and stop whiteTimer and blackTimer
+         */
+        if (move.getPiece().getColor() != Piece.Color.WHITE) {
             whiteTimer.stop();
             blackTimer.start();
         } else {

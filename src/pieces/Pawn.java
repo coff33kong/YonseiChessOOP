@@ -20,7 +20,8 @@ public class Pawn extends Piece {
                 return false;
 
             //can move two squares
-            if (move.getPiece().getMoved() == false
+            if ((move.getOriginRank() == 2 && move.getPiece().getColor() == Color.WHITE)
+                    || (move.getOriginRank() == 7 && move.getPiece().getColor() == Color.BLACK)
                     && Math.abs(move.getDestinationRank() - move.getOriginRank()) == 2) {
 
                 return true;
