@@ -1,6 +1,7 @@
 package util;
 
 import board.Board;
+import pieces.Pawn;
 import pieces.Piece;
 import pieces.PieceSet;
 import ui.*;
@@ -50,8 +51,27 @@ public class GameModel extends Observable {
         MoveLogger.addMove(move);
         Board.executeMove(move);
         moveHistoryPanel.printMove(move);
+        //TODO UNDO
         boardPanel.executeMove(move);
         switchTimer(move);
+
+        // promotion
+        if (Pawn.class.equals(move.getPiece().getClass())) {
+            switch (move.getDestinationRank()) {
+                case 1:
+                    if (Piece.Color.BLACK.equals(move.getPiece().getColor())) {
+                        Core.getPromotionFrame().setMove(move);
+                        Core.getPromotionFrame().setVisible(true);
+                    }
+                    break;
+                case 8:
+                    if (Piece.Color.WHITE.equals(move.getPiece().getColor())) {
+                        Core.getPromotionFrame().setMove(move);
+                        Core.getPromotionFrame().setVisible(true);
+                    }
+                    break;
+            }
+        }
 
         if (MoveValidator.isCheckMove(move,
                 PieceSet.getOpponentKingFile(move.getPiece().getColor()),

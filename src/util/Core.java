@@ -2,6 +2,7 @@ package util;
 
 import ui.LaunchFrame;
 import ui.PreferencesFrame;
+import ui.PromotionFrame;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -16,6 +17,7 @@ public class Core {
 
     private static LaunchFrame launchFrame;
     private static PreferencesFrame preferencesFrame;
+    private static PromotionFrame promotionFrame;
 
     private Core() {
     }
@@ -28,6 +30,7 @@ public class Core {
         inGame = false;
         preferences = new Preferences();
         launchFrame = new LaunchFrame();
+        promotionFrame = new PromotionFrame();
     }
 
     public static void startGame() {
@@ -58,4 +61,10 @@ public class Core {
     public static boolean isInGame() {
         return inGame;
     }
+
+    // gameModel
+    public static GameModel getGameModel() { return gameModel; }
+
+    // promotion
+    public static PromotionFrame getPromotionFrame() { return promotionFrame; }
 }

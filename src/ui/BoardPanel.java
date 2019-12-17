@@ -35,9 +35,8 @@ public class BoardPanel extends JPanel implements Observer {
         gameModel.addObserver(this);
     }
 
-    public BoardPanel() {
 
-    }
+    public BoardPanel() { }
 
 
     public void submitMoveRequest(char originFile, int originRank, char destinationFile, int destinationRank) {
@@ -232,6 +231,13 @@ public class BoardPanel extends JPanel implements Observer {
 
     }
 
+    // TODO promotion
+    public void promote(Move move, Piece piece) {
+        JPanel destPanel = getSquarePanel(move.getDestinationFile(), move.getDestinationRank());
+        destPanel.removeAll();
+        destPanel.add(getPieceImageLabel(piece));
+        destPanel.repaint();
+    }
 
     @Override
     public void update(Observable o, Object arg) {

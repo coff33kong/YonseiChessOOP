@@ -132,4 +132,10 @@ public class Board {
         getSquare('e', 1).setCurrentPiece(whiteKingIterator.next());
         getSquare('e', 8).setCurrentPiece(blackKingIterator.next());
     }
+
+    // promotion
+    public static void promote(Move move, Piece piece) {
+        Square destSquare = getSquare(move.getDestinationFile(), move.getDestinationRank());
+        destSquare.setCurrentPiece(piece);
+    }
 }
