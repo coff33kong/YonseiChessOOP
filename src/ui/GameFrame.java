@@ -60,6 +60,10 @@ public class GameFrame extends JFrame implements Observer{
         JOptionPane.showMessageDialog(this, "That's a Checkmate!", "Checkmate", JOptionPane.WARNING_MESSAGE);
     }
 
+    public void showTimeOutDialog() {
+        JOptionPane.showMessageDialog(this, "Time's up!", "Countdown", JOptionPane.WARNING_MESSAGE);
+    }
+
     private void loadInterface() {
         initializeMenuBar();
         initializePanels();

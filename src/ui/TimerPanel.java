@@ -15,6 +15,9 @@ public class TimerPanel extends JPanel implements Observer {
     private GameModel gameModel;
     private Time whiteTime;
     private Time blackTime;
+    Preferences preferences = Core.getPreferences();
+    private GameFrame gameFrame;
+
 
     private JPanel displayPanel;
     private JPanel whiteTimerPanel;
@@ -27,24 +30,41 @@ public class TimerPanel extends JPanel implements Observer {
     private JPanel blackTimerStatusPanel;
 
 
-    private static long wTime = -32400000L;
-    private static long bTime = -32400000L;
+    public static long wTime ;
+    public static long bTime ;
+    private String timeLimit = "00:00:00";
 
     public TimerPanel(GameModel gameModel) {
         super(new BorderLayout());
         this.gameModel = gameModel;
-        whiteTime = Time.valueOf("00:00:00");
-        blackTime = Time.valueOf("00:00:00");
+        if (preferences.getTimerMode() == Preferences.TimerMode.COUNTDOWN) {
+            int getTime = preferences.getTimeLimit();
+            int getTimeHour = getTime / 60;
+            int getTimeMinute = getTime % 60;
+            timeLimit = getTimeHour + ":" + getTimeMinute + ":00";
+        }
+        whiteTime = Time.valueOf(timeLimit);
+        blackTime = Time.valueOf(timeLimit);
         initialize();
         gameModel.addObserver(this);
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg == whiteTime ) {
-            wTime += 1000;
-        } else if (arg == blackTime) {
-            bTime += 1000;
+        if (preferences.getTimerMode() == Preferences.TimerMode.STOPWATCH) {
+            if (arg == whiteTime) {
+                wTime += 1000;
+            } else if (arg == blackTime) {
+                bTime += 1000;
+            }
+        } else if (preferences.getTimerMode() == Preferences.TimerMode.COUNTDOWN) {
+            if (arg == whiteTime) {
+                wTime -= 1000;
+                gameModel.stopTimer2();
+            } else if (arg == blackTime) {
+                bTime -= 1000;
+                gameModel.stopTimer2();
+            }
         }
     }
 
@@ -56,7 +76,7 @@ public class TimerPanel extends JPanel implements Observer {
             Show whiteTimerStatusPanel
             Blind blackTimerStatusPanel
          */
-        update(gameModel,whiteTime);
+        update(gameModel, whiteTime);
         whiteTime.setTime(wTime);
         whiteTimerDigitsLabel.setText(whiteTime.toString());
         setBackgroundColor(Color.WHITE);
@@ -68,6 +88,7 @@ public class TimerPanel extends JPanel implements Observer {
         blackTime.setTime(bTime);
         blackTimerDigitsLabel.setText(blackTime.toString());
         setBackgroundColor(Color.BLACK);
+
     }
 
     private void setBackgroundColor(Color color) {
@@ -82,44 +103,47 @@ public class TimerPanel extends JPanel implements Observer {
 
     private void initialize() {
         Preferences preferences = Core.getPreferences();
+
+        whiteTimerDigitsLabel = new JLabel(whiteTime.toString());
+        whiteTimerDigitsLabel.setFont(whiteTimerDigitsLabel.getFont().deriveFont(48f));
+        whiteTimerDigitsPanel = new JPanel();
+        whiteTimerDigitsPanel.add(whiteTimerDigitsLabel);
+        whiteTimerStatusPanel = new JPanel();
+        whiteTimerStatusPanel.setBackground(Color.WHITE);
+        whiteTimerPanel = new JPanel(new BorderLayout());
+        whiteTimerPanel.add(whiteTimerDigitsPanel, BorderLayout.LINE_START);
+        whiteTimerPanel.add(whiteTimerStatusPanel, BorderLayout.CENTER);
+        whiteTimerPanel.setBorder(BorderFactory.createTitledBorder("White"));
+
+        blackTimerDigitsLabel = new JLabel(blackTime.toString());
+        blackTimerDigitsLabel.setFont(blackTimerDigitsLabel.getFont().deriveFont(48f));
+        blackTimerDigitsPanel = new JPanel();
+        blackTimerDigitsPanel.add(blackTimerDigitsLabel);
+        blackTimerStatusPanel = new JPanel();
+        blackTimerStatusPanel.setBackground(Color.BLACK);
+        blackTimerPanel = new JPanel(new BorderLayout());
+        blackTimerPanel.add(blackTimerDigitsPanel, BorderLayout.LINE_START);
+        blackTimerPanel.add(blackTimerStatusPanel, BorderLayout.CENTER);
+        blackTimerPanel.setBorder(BorderFactory.createTitledBorder("Black"));
+
+        displayPanel = new JPanel(new GridLayout(2, 1));
+        displayPanel.add(whiteTimerPanel);
+        displayPanel.add(blackTimerPanel);
+
+        this.add(displayPanel, BorderLayout.CENTER);
+        this.setPreferredSize(new Dimension(300, 200));
+
         switch (preferences.getTimerMode()) {
             case STOPWATCH:
-                whiteTimerDigitsLabel = new JLabel(whiteTime.toString());
-                whiteTimerDigitsLabel.setFont(whiteTimerDigitsLabel.getFont().deriveFont(48f));
-                whiteTimerDigitsPanel = new JPanel();
-                whiteTimerDigitsPanel.add(whiteTimerDigitsLabel);
-                whiteTimerStatusPanel = new JPanel();
-                whiteTimerStatusPanel.setBackground(Color.WHITE);
-                whiteTimerPanel = new JPanel(new BorderLayout());
-                whiteTimerPanel.add(whiteTimerDigitsPanel, BorderLayout.LINE_START);
-                whiteTimerPanel.add(whiteTimerStatusPanel, BorderLayout.CENTER);
-                whiteTimerPanel.setBorder(BorderFactory.createTitledBorder("White"));
-
-                blackTimerDigitsLabel = new JLabel(blackTime.toString());
-                blackTimerDigitsLabel.setFont(blackTimerDigitsLabel.getFont().deriveFont(48f));
-                blackTimerDigitsPanel = new JPanel();
-                blackTimerDigitsPanel.add(blackTimerDigitsLabel);
-                blackTimerStatusPanel = new JPanel();
-                blackTimerStatusPanel.setBackground(Color.BLACK);
-                blackTimerPanel = new JPanel(new BorderLayout());
-                blackTimerPanel.add(blackTimerDigitsPanel, BorderLayout.LINE_START);
-                blackTimerPanel.add(blackTimerStatusPanel, BorderLayout.CENTER);
-                blackTimerPanel.setBorder(BorderFactory.createTitledBorder("Black"));
-
-                displayPanel = new JPanel(new GridLayout(2, 1));
-                displayPanel.add(whiteTimerPanel);
-                displayPanel.add(blackTimerPanel);
-
-                this.add(displayPanel, BorderLayout.CENTER);
-                this.setPreferredSize(new Dimension(300, 200));
+                wTime = -32400000L;
+                bTime = -32400000L;
                 break;
 
             case COUNTDOWN:
-                displayPanel = new JPanel(new GridLayout(1, 1));
 
-
-                this.add(displayPanel, BorderLayout.CENTER);
-                this.setPreferredSize(new Dimension(300, 200));
+                int getTime = preferences.getTimeLimit();
+                wTime = -32400000L + 60000*getTime;
+                bTime = -32400000L + 60000*getTime;
                 break;
         }
     }

@@ -120,6 +120,14 @@ public class GameModel extends Observable {
         blackTimer.stop();
     }
 
+    public void stopTimer2() {
+        if (TimerPanel.wTime <= -32400000L || TimerPanel.bTime <= -32400000L ) {
+            stopTimer();
+            gameFrame.showTimeOutDialog();
+        }
+    }
+
+
     public BoardPanel getBoardPanel() {
         return boardPanel;
     }
